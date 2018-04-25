@@ -41,17 +41,24 @@ services:
 #    extra_hosts:
 #      - "moby:127.0.0.1"
 
+  kafka0:
+    image: confluentinc/cp-kafka:4.1.0
+    hostname: kafka0
+    depends_on:
+      - zoo1
+
   kafka1:
     image: confluentinc/cp-kafka:4.1.0
     hostname: kafka1
+    command: "sleep infinity"
     ports:
       - "9092:9092"
     environment:
-      # add the entry "127.0.0.1    kafka1" to your /etc/hosts file
       KAFKA_SASL_ENABLED_MECHANISMS: SCRAM-SHA-256
-      #KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: SCRAM-SHA-256
-      KAFKA_LISTENERS: "SASL_PLAINTEXT://kafka1:9092"
-      KAFKA_ADVERTISED_LISTENERS: "SASL_PLAINTEXT://0.0.0.0:9092"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: SCRAM-SHA-256
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_LISTENERS: "SASL_PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "SASL_PLAINTEXT://kafka1:9092"
       KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
@@ -59,5 +66,45 @@ services:
     volumes:
       - ./zk-single-kafka-multiple/kafka1/data:/var/lib/kafka/data
       - .:/etc/kafka/secrets/
+    depends_on:
+      - zoo1
+
+  kafka9:
+    image: confluentinc/cp-kafka:4.1.0
+    hostname: kafka9
+    volumes:
+      - ./zk-single-kafka-multiple/kafka1/data:/var/lib/kafka/data
+      - .:/etc/kafka/secrets/
+    depends_on:
+      - zoo1
+      - kafka1
+
+  zoonavigator-web:
+    image: elkozmon/zoonavigator-web:0.4.0
+    ports:
+     - "8004:8000"
+    environment:
+      API_HOST: "zoonavigator-api"
+      API_PORT: 9000
+    links:
+     - zoonavigator-api
+    depends_on:
+     - zoonavigator-api
+    restart: unless-stopped
+
+  zoonavigator-api:
+    image: elkozmon/zoonavigator-api:0.4.0
+    environment:
+      SERVER_HTTP_PORT: 9000
+    restart: unless-stopped
+    depends_on:
+      - zoo1
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    ports:
+      - "9001:9000"
+    environment:
+      ZK_HOSTS: zoo1:2181
     depends_on:
       - zoo1
