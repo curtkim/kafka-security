@@ -15,3 +15,6 @@
 
     export KAFKA_OPTS="-Djava.security.auth.login.config=$(pwd)/kafka_client_jaas.conf"
     kafka_2.11-1.1.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic --producer.config=producer.properties
+
+## 특이점
+- kafka_server_jaas.conf에 user를 추가함
