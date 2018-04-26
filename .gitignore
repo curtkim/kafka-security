@@ -1,3 +1,4 @@
 kafka_2.11-1.1.0
 *.tgz
 target
+tmp
