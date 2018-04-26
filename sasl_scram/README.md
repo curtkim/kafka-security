@@ -2,7 +2,7 @@
 
     wget http://apache.mirror.cdnetworks.com/kafka/1.1.0/kafka_2.11-1.1.0.tgz
 
-    export KAFKA_OPTS="-Djava.security.auth.login.config=$(pwd)/zookeeper_jaas.conf -Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
+    export KAFKA_OPTS="-Djava.security.auth.login.config=$(pwd)/zookeeper_jaas.conf"
     kafka_2.11-1.1.0/bin/zookeeper-server-start.sh zookeeper.properties
 
     kafka_2.11-1.1.0/bin/kafka-configs.sh --zookeeper localhost:2181 --alter --add-config 'SCRAM-SHA-256=[password=root-secret]' --entity-type users --entity-name root
