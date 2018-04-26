@@ -10,6 +10,6 @@ https://docs.confluent.io/current/kafka/authentication_sasl_scram.html
     docker-compose run kafka0 kafka-topics --create --topic taxi.driver.location --if-not-exists --zookeeper zookeeper:32181 --partitions 4 --replication-factor 1
     docker-compose run kafka0 kafka-console-consumer --bootstrap-server kafka0:9092 --topic taxi.driver.location --from-beginning
 
-
+    docker-compose run kafka9 bash
     export KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/secrets/client_jaas.conf"
     kafka-console-consumer --bootstrap-server kafka1:9092 --topic taxi.driver.location --from-beginning –-consumer.config /etc/kafka/secrets/client.properties

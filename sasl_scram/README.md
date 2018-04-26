@@ -1,4 +1,4 @@
-## 출처(https://stackoverflow.com/questions/43469962/kafka-sasl-zookeeper-authentication)
+## HOWTO
 
     wget http://apache.mirror.cdnetworks.com/kafka/1.1.0/kafka_2.11-1.1.0.tgz
 
@@ -20,4 +20,3 @@
     kafka_2.11-1.1.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic --producer.config=producer.properties
 
 ## 특이점
-- kafka_server_jaas.conf에 user를 추가함
